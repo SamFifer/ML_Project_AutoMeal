@@ -4,3 +4,5 @@ __pycache__/
 .ipynb_checkpoints/
 .gradio/
 recipes.csv
+walmart_grocery.csv
+walmart_ingredient_match_audit.csv
