@@ -7,15 +7,15 @@ import re
 # CONFIGURATION
 # ============================================================
 
-INPUT_FILE = r"C:\Users\samjf\Downloads\ML LLM Project\ML_Project_AutoMeal\recipes_10000_entrees.csv"
+INPUT_FILE = "Recipes/recipes_10000_entrees.csv"
 
 OUTPUT_FILES = {
-    "vegetarian": "recipes_vegetarian.csv",
-    "vegan": "recipes_vegan.csv",
-    "pescatarian": "recipes_pescatarian.csv",
-    "gluten_free": "recipes_gluten_free.csv",
-    "kosher": "recipes_kosher.csv",
-    "halal": "recipes_halal.csv",
+    "vegetarian": "Recipes/recipes_vegetarian.csv",
+    "vegan": "Recipes/recipes_vegan.csv",
+    "pescatarian": "Recipes/recipes_pescatarian.csv",
+    "gluten_free": "Recipes/recipes_gluten_free.csv",
+    "kosher": "Recipes/recipes_kosher.csv",
+    "halal": "Recipes/recipes_halal.csv",
 }
 
 # ============================================================
@@ -85,6 +85,10 @@ MEAT_AND_SEAFOOD = [
     "lard",
     "tallow",
     "suet",
+    "kielbasa",
+    "bratwurst",
+    "chorizo",
+    "hot dog",
 ]
 
 # Additional animal-derived ingredients that disqualify
@@ -191,6 +195,10 @@ PESCATARIAN_EXCLUSIONS = [
     "beef stock",
     "bone broth",
     "meat broth",
+    "kielbasa",
+    "bratwurst",
+    "chorizo",
+    "hot dog",
 ]
 
 # ============================================================
@@ -263,7 +271,7 @@ def contains_term(text, terms):
     for term in terms:
         term = normalize_text(term)
 
-        pattern = r"(?<!\w)" + re.escape(term) + r"(?!\w)"
+        pattern = r"(?<!\w)" + re.escape(term) + r"s?(?!\w)"
 
         if re.search(pattern, text):
             return True
@@ -277,9 +285,9 @@ def get_ingredients(row):
     ingredients = row["RecipeIngredientParts"]
 
     if not isinstance(ingredients, list):
-        return ""
+        return normalize_text(row["Name"])
 
-    return " ".join(
+    return normalize_text(row["Name"]) + " " + " ".join(
         normalize_text(item)
         for item in ingredients
         if item is not None
@@ -436,6 +444,7 @@ print(f"Loaded recipes: {len(df):,}")
 
 # Make sure the necessary columns exist.
 required_columns = [
+    "Name",
     "RecipeIngredientParts",
     "Keywords",
 ]
